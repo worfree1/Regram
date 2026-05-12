@@ -1,0 +1,258 @@
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ATRAHEB IOS - insta Regram</title>
+    
+    <style>
+        :root {
+            --bg: #050506;
+            --panel: rgba(16, 16, 20, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f4f7fb;
+            --primary-cyan: #00f2ff;
+            --shadow-cyan: 0 0 20px rgba(0, 242, 255, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background: #08080a;
+            line-height: 1.6; min-height: 100vh; overflow-x: hidden; width: 100%;
+            position: relative;
+        }
+
+        /* تأثير النجوم */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: -2;
+        }
+
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+
+        /* الخط الجانبي */
+        .side-line-container {
+            position: fixed; right: 20px; top: 15%; height: 60%;
+            width: 2px; background: linear-gradient(to bottom, var(--primary-cyan), transparent);
+            z-index: 10; display: flex; flex-direction: column; align-items: center;
+        }
+        .side-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid var(--primary-cyan);
+            box-shadow: 0 0 15px var(--primary-cyan);
+            background: #000; overflow: hidden;
+            position: absolute; top: -25px;
+        }
+        .side-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .page-shell { position: relative; z-index: 1; width: 100%; max-width: 600px; margin: 0 auto; padding: 20px 14px; }
+        .glass { background: var(--panel); border: 1px solid var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .hero { border-radius: 28px; padding: 25px; margin-bottom: 20px; border: 1px solid rgba(0, 242, 255, 0.2); }
+        .hero-grid { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 20px; align-items: center; }
+        .app-icon { width: 90px; height: 90px; border-radius: 22px; overflow: hidden; border: 2px solid var(--primary-cyan); box-shadow: var(--shadow-cyan); }
+        .app-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* تأثير النص المتغير (سمائي، أزرق، أصفر) السائل */
+        .eyebrow { 
+            display: inline-flex; padding: 6px 18px; border-radius: 12px; 
+            font-size: 14px; font-weight: 900; margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-image: linear-gradient(90deg, #00f2ff, #0072ff, #ffff00, #00f2ff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: liquid-flow 4s linear infinite;
+        }
+
+        @keyframes liquid-flow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .app-name { font-size: 26px; font-weight: 900; color: #fff; }
+
+        .action-card { margin-top: 20px; border-radius: 20px; padding: 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); grid-column: 1 / -1; text-align: center; }
+
+        .download-btn {
+            display: flex; align-items: center; justify-content: center; width: 100%; height: 60px;
+            border-radius: 18px; font-weight: 800; font-size: 18px; text-decoration: none;
+            background: linear-gradient(135deg, #00d4ff, #005f73);
+            color: #fff; box-shadow: var(--shadow-cyan); cursor: pointer; border: none; position: relative; overflow: hidden;
+        }
+        .progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: rgba(255, 255, 255, 0.2); }
+        .success-icon { display: none; font-size: 22px; margin-left: 10px; color: #39ff14; text-shadow: 0 0 10px #39ff14; }
+
+        .tutorial-link {
+            margin-top: 25px; padding: 20px; border-radius: 20px;
+            border: 1px dashed var(--primary-cyan); text-align: center;
+            text-decoration: none; display: block;
+        }
+
+        .panel { border-radius: 28px; padding: 25px; margin-top: 20px; }
+        .section-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; text-align: center; color: var(--primary-cyan); }
+
+        .screenshots-container { display: flex; gap: 15px; justify-content: center; margin-bottom: 20px; }
+        .screenshot-item { flex: 1; max-width: 48%; aspect-ratio: 9/16; border-radius: 20px; overflow: hidden; border: 2px solid var(--border); }
+        .screenshot-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* قائمة المميزات الاحترافية */
+        .features-list { 
+            background: rgba(255, 255, 255, 0.02); border-radius: 20px; padding: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.1); direction: rtl;
+        }
+        .feature-item { 
+            display: flex; align-items: center; margin-bottom: 12px; font-size: 14px; 
+            color: #d1d5db; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px;
+        }
+        .feature-item::before {
+            content: "✧"; margin-left: 10px; color: var(--primary-cyan); font-weight: bold;
+        }
+        
+        .footer-voxa {
+            text-align: center; margin-top: 30px; padding: 25px; font-size: 16px; color: #fff;
+            border-radius: 24px; border: 1px solid var(--primary-cyan);
+        }
+        .footer-voxa a { color: var(--primary-cyan); font-weight: 900; text-decoration: none; }
+    </style>
+</head>
+
+<body>
+    <canvas class="stars" id="starCanvas"></canvas>
+    <audio id="successSound" src="https://ashtemobile.tututweak.com/sound.mp3" preload="auto"></audio>
+
+    <div class="side-line-container">
+        <div class="side-avatar">
+            <img src="https://i.ibb.co/tPBzg0ht/image.png" alt="Owner">
+        </div>
+    </div>
+
+    <main class="page-shell">
+        <section class="hero glass">
+            <div class="hero-grid">
+                <div class="app-icon">
+                    <img src="https://i.ibb.co/TC9Ggzp/IMG-2560.png" alt="Snap Plus">
+                </div>
+                <div>
+                    <div class="eyebrow"> هونستا </div>
+                    <h1 class="app-name">insta Regram ريگرام</h1>
+                </div>
+                <div class="action-card">
+                    <button class="download-btn" onclick="startDownload(this, 'itms-services://?action=download-manifest&amp;url=https://github.com/worfree1/Sei/releases/download/U/manifest.plist')">
+                        <div class="progress-fill"></div>
+                        <span class="btnText">تثبيت الآن</span>
+                        <span class="success-icon">✧ ✅ ✧</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <a href="https://t.me/atraheeb7/55" class="tutorial-link glass">
+            <p style="color: #fff;"> حل مشكلة مطور مؤسسة غير موثوق فيه</p>
+            <span style="color: var(--primary-cyan); font-size: 13px;">اضغط هنا لمشاهدة الشرح</span>
+        </a>
+
+        <section class="panel glass">
+            <h2 class="section-title">مميزات انستا ريگرام</h2>
+            <div class="screenshots-container">
+                <div class="screenshot-item"><img src="https://i.ibb.co/kgy4bJ7Y/311231-FB-26-A9-4464-8-E26-5-ED661313956.png"></div>
+                <div class="screenshot-item"><img src="https://i.ibb.co/8LQxGjfb/07-FC811-B-4-C6-C-4-A12-997-F-41856-FF8-AD79.png"></div>
+            </div>
+
+            <div class="features-list">
+                <p style="color: var(--primary-cyan); font-weight: 900; margin-bottom: 15px; text-align: center;">اهم مميزاتها</p>
+                <div class="feature-item">فك حضر ip</div>
+                <div class="feature-item">رفع فويز من استوديو</div>
+                <div class="feature-item">ابقاء رسائل المحذوفه / مشاهدة ستوري عدم علم طرف الاخر</div>
+                <div class="feature-item">حفظ الستوريات والصور والفديوات</div>
+                <div class="feature-item">سكرين شاشاه بشكل مخفي عدم علم طرف الاخر لفديوات المؤقته</div>
+                <div class="feature-item">الى اخره من المميزات</div>
+            </div>
+        </section>
+
+        <div class="footer-voxa glass">
+            تم تطوير و برمجة الموقع من قبل <a href="https://t.me/atraheebb">اترهيب</a>
+        </div>
+    </main>
+
+    <script>
+        // تأثير النجوم
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            stars = [];
+            for (let i = 0; i < 120; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    opacity: Math.random(),
+                    speed: 0.015
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.beginPath(); ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2); ctx.fill();
+                star.opacity += star.speed;
+                if (star.opacity > 1 || star.opacity < 0) star.speed *= -1;
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', initStars);
+        initStars(); drawStars();
+
+        function startDownload(btn, link) {
+            if (btn.classList.contains('disabled')) return;
+            btn.classList.add('disabled');
+            const fill = btn.querySelector('.progress-fill');
+            const btnText = btn.querySelector('.btnText');
+            const successIcon = btn.querySelector('.success-icon');
+            const sound = document.getElementById('successSound');
+            let percentage = 0;
+            
+            const interval = setInterval(() => {
+                percentage += 1;
+                fill.style.width = percentage + '%';
+                btnText.innerText = 'جاري التثبيت... ' + percentage + '%';
+                
+                if (percentage >= 100) {
+                    clearInterval(interval);
+                    btnText.innerText = 'اكتمل بنجاح';
+                    successIcon.style.display = 'inline-block';
+                    
+                    // تشغيل الصوت
+                    sound.play().catch(e => console.log("Audio play deferred"));
+
+                    // التوجيه التلقائي
+                    setTimeout(() => {
+                        window.location.href = link; // فتح رابط التثبيت
+                        setTimeout(() => {
+                            window.location.href = "https://t.me/atraheebb"; // فتح القناة تلقائياً
+                        }, 2000);
+                    }, 1000);
+                }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
